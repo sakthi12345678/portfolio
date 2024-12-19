@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Page Navigation</title>
+    <style>
+        .section {
+            display: none; /* Hide all sections by default */
+        }
+        .active {
+            display: block; /* Display the active section */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#home" data-target="home">Home</a></li>
+            <li><a href="#about" data-target="about">About</a></li>
+            <li><a href="#contact" data-target="contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <div id="home" class="section active">
+        <h1>Home</h1>
+        <p>Welcome to the home page!</p>
+    </div>
+    <div id="about" class="section">
+        <h1>About</h1>
+        <p>Learn more about us.</p>
+    </div>
+    <div id="contact" class="section">
+        <h1>Contact</h1>
+        <p>Get in touch with us.</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const links = document.querySelectorAll('nav a');
+    const sections = document.querySelectorAll('.section');
+
+    function navigateToSection(targetId) {
+        // Hide all sections
+        sections.forEach(section => section.classList.remove('active'));
+
+        // Show the target section
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+    }
+
+    // Handle link clicks
+    links.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default anchor behavior
+            const targetId = link.getAttribute('data-target');
+            navigateToSection(targetId);
+            history.pushState(null, null, link.getAttribute('href'));
+        });
+    });
+
+    // Handle back/forward navigation
+    window.addEventListener('popstate', () => {
+        const hash = location.hash.substring(1);
+        navigateToSection(hash);
+    });
+
+    // Initialize based on URL
+    const initialHash = location.hash.substring(1);
+    if (initialHash) {
+        navigateToSection(initialHash);
+    }
+});
+
+    </script>
+</body>
+</html>
+
